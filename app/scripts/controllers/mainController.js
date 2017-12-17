@@ -1,22 +1,16 @@
-//var cryptoSocket = require('crypto-socket');
 var BigNumber = require('bignumber.js');
 angular.module('ethExplorer')
     .controller('mainCtrl', function ($rootScope, $scope, $location) {
 
         // Display & update block list
-        getETHRates();
-        updateBlockList();
-        updateTXList();
         updateStats();
-        getHashrate();
 
-        web3.eth.filter("latest", function(error, result){
+        $scope.blocks = [];
+        $scope.recenttransactions = [];
+        web3.eth.subscribe('newBlockHeaders', function(error, result){
           if (!error) {
-            getETHRates();
-            updateBlockList();
-            updateTXList();
+            updateBlockList(result);
             updateStats();
-            getHashrate();
             $scope.$apply();
           }
         });
@@ -156,7 +150,6 @@ angular.module('ethExplorer')
               }
           }
           // Block Explorer Info
-          $scope.isConnected = web3.isConnected();
           //$scope.peerCount = web3.net.peerCount;
           $scope.versionApi = web3.version.api;
           $scope.versionClient = web3.version.client;
@@ -169,49 +162,24 @@ angular.module('ethExplorer')
 }
 
 
-        function getHashrate()	{
-          $.getJSON("https://etherchain.org/api/miningEstimator", function(json) {
-            var hr = json.data[0].hashRate;
-            $scope.hashrate = hr;
-       	});
-      }
-
-        function getETHRates() {
-          $.getJSON("https://api.coinmarketcap.com/v1/ticker/ethereum/", function(json) {
-            var price = Number(json[0].price_usd);
-            $scope.ethprice = "$" + price.toFixed(2);
-          });
-
-          $.getJSON("https://api.coinmarketcap.com/v1/ticker/ethereum/", function(json) {
-            var btcprice = Number(json[0].price_btc);
-            $scope.ethbtcprice = btcprice;
-          });
-
-          $.getJSON("https://api.coinmarketcap.com/v1/ticker/ethereum/", function(json) {
-            var cap = Number(json[0].market_cap_usd);
-            //console.log("Current ETH Market Cap: " + cap);
-            $scope.ethmarketcap = cap;
-          });
-        }
-
-        function updateTXList() {
-            var currentTXnumber = web3.eth.blockNumber;
-            $scope.txNumber = currentTXnumber;
-            $scope.recenttransactions = [];
-            for (var i=0; i < 10 && currentTXnumber - i >= 0; i++) {
-              $scope.recenttransactions.push(web3.eth.getTransactionFromBlock(currentTXnumber - i));
+        function updateTXList(txs) {
+            var txNumber = txs.length
+            var txNumber2 = $scope.recenttransactions.length
+            for (var i=0; i < 10 && i < txNumber; i++) {
+              web3.eth.getTransaction(txs[i], function(tx) {
+                $scope.recenttransactions.push(tx)
+              })
             }
         }
 
-        function updateBlockList() {
-            var currentBlockNumber = web3.eth.blockNumber;
-            $scope.blockNumber = currentBlockNumber;
-            $scope.blocks = [];
-            for (var i=0; i < 10 && currentBlockNumber - i >= 0; i++) {
-              $scope.blocks.push(web3.eth.getBlock(currentBlockNumber - i));
-            }
+        function updateBlockList(block) {
+            var currentBlockNumber = block.number
+            $scope.blockNumber = currentBlockNumber
+            $scope.blocks.unshift(block)
+            var l = $scope.blocks.length
+            $scope.blocks.splice(10, l)
+            //updateTXList(block.transactions)
         }
-
     });
 
 angular.module('filters', []).

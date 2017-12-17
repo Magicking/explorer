@@ -2,17 +2,19 @@
 ///////////////////////////////
 // TODO: Put go into a config.js
 // But how to include a file from local?
+const angular = require('angular')
+const Web3 = require('web3')
+const web3 = new Web3();
 
-var GETH_HOSTNAME	= "localhost";	// put your IP address!
-var APP_HOSTNAME 	= "See package.json --> scripts --> start: Change 'localhost'!!!";
+require('angular-router-browserify')(angular)
+require('angular-ui-bootstrap')
+require('angular-sanitize')
 
-var GETH_RPCPORT  	= 8545; 		// for geth --rpcport GETH_RPCPORT
-var APP_PORT 		= "See package.json --> scripts --> start: Perhaps change '8000'";
+var GETH_RPC_URL	= "";	// put your IP address!
+var APP_HOSTNAME 	= "";
 
 // this is creating the corrected geth command
 var WL=window.location;
-var geth_command	= "geth --rpc --rpcaddr "+ GETH_HOSTNAME + " --rpcport " + GETH_RPCPORT +'\
- --rpcapi "web3,eth" ' + ' --rpccorsdomain "' + WL.protocol +"//" + WL.host + '"';
 
 ////////////////////////////////////////////////////
 //end AltSheets changes
@@ -90,10 +92,10 @@ angular.module('ethExplorer', ['ngRoute','ui.bootstrap','filters','ngSanitize'])
             //$locationProvider.html5Mode(true);
     }])
     .run(function($rootScope) {
-        var web3 = require('web3');
-
         // begin AltSheets changes
-        web3.setProvider(new web3.providers.HttpProvider("http://"+GETH_HOSTNAME+":"+GETH_RPCPORT));
+        var provider = new web3.providers.WebsocketProvider(GETH_RPC_URL)
+        console.log(web3)
+        web3.setProvider(provider)
         // end AltSheets changes
 
         $rootScope.web3=web3;
@@ -104,10 +106,5 @@ angular.module('ethExplorer', ['ngRoute','ui.bootstrap','filters','ngSanitize'])
         function sleepFor( sleepDuration ){
             var now = new Date().getTime();
             while(new Date().getTime() < now + sleepDuration){ /* do nothing */ }
-        }
-        var connected = false;
-        if(!web3.isConnected()) {
-            $('#connectwarning').modal({keyboard:false,backdrop:'static'})
-            $('#connectwarning').modal('show')
         }
     });

@@ -95,7 +95,6 @@ angular.module('ethExplorer')
 
 	                // Block Explorer Info
 
-	                $scope.isConnected = web3.isConnected();
 	                //$scope.peerCount = web3.net.peerCount;
 	                $scope.versionApi = web3.version.api;
 	                $scope.versionClient = web3.version.client;
