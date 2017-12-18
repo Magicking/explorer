@@ -237,7 +237,7 @@ angular.module('filters', []).
     return function (txt) {
       if (isNaN(txt)) return txt;
       var b = new BigNumber(txt);
-      var w = web3.fromWei(b, "ether");
+      var w = web3.utils.fromWei(b, "ether");
       return w.toFixed(6) + " ETH";
     };
   }).
