@@ -10,9 +10,6 @@ require('angular-router-browserify')(angular)
 require('angular-ui-bootstrap')
 require('angular-sanitize')
 
-var GETH_RPC_URL	= "";	// put your IP address!
-var APP_HOSTNAME 	= "";
-
 // this is creating the corrected geth command
 var WL=window.location;
 
@@ -94,7 +91,7 @@ angular.module('ethExplorer', ['ngRoute','ui.bootstrap','filters','ngSanitize'])
     .run(function($rootScope) {
         // begin AltSheets changes
         var provider = new web3.providers.WebsocketProvider(GETH_RPC_URL)
-        console.log(web3)
+
         web3.setProvider(provider)
         // end AltSheets changes
 

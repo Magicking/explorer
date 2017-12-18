@@ -11,7 +11,7 @@
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "browserify -t brfs app/app.js app/scripts/controllers/* -o app/bundle.js",
+    "build": "browserify -t brfs app/config.js app/app.js app/scripts/controllers/* -o app/bundle.js",
     "prestart": "npm install",
     "start": "http-server ./app -a localhost -p 8000 -c-1"
   },
