@@ -22,7 +22,7 @@ angular.module('ethExplorer')
             if($scope.addressId!==undefined) {
             	getAddressBalance()
                     .then(function(result){
-                    	$scope.balance = web3.utils.fromWei(result).toNumber();
+                        $scope.balance = web3.utils.fromWei(result, "ether");
                     });
             	getAddressTransactionCount()
 	                .then(function(result){
