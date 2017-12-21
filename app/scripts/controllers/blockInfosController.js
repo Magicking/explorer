@@ -13,7 +13,7 @@ angular.module('ethExplorer')
 
                 getBlockInfos()
                     .then(function(result){
-                        var number = web3.eth.blockNumber;
+                        var number = $rootScope.web3.eth.blockNumber;
 
                     $scope.result = result;
 
@@ -21,7 +21,7 @@ angular.module('ethExplorer')
 
                     //if ($scope.numberOfUncles!=0) {
                     //	uncle1=result.uncles[0];
-                    //	console.log(web3.eth.getUncle(uncle1));
+                    //	console.log($rootScope.web3.eth.getUncle(uncle1));
                     //}
 
                     if(result.hash!==undefined){
@@ -67,7 +67,7 @@ angular.module('ethExplorer')
                         }
 
                         if ($scope.blockNumber !== undefined){
-                            var info = web3.eth.getBlock($scope.blockNumber);
+                            var info = $rootScope.web3.eth.getBlock($scope.blockNumber);
                             if (info !== undefined){
                                 var newDate = new Date();
                                 newDate.setTime(info.timestamp * 1000);
@@ -84,7 +84,7 @@ angular.module('ethExplorer')
             function getBlockInfos(){
                 var deferred = $q.defer();
 
-                web3.eth.getBlock($scope.blockId,function(error, result) {
+                $rootScope.web3.eth.getBlock($scope.blockId,function(error, result) {
                     if(!error){
                         deferred.resolve(result);
                     }
@@ -103,13 +103,13 @@ angular.module('ethExplorer')
         // parse transactions
         $scope.transactions = []
 
-        web3.eth.getBlockTransactionCount($scope.blockId, function(error, result){
+        $rootScope.web3.eth.getBlockTransactionCount($scope.blockId, function(error, result){
             var txCount = result;
             $scope.numberOfTransactions = txCount;
             for (var blockIdx = 0; blockIdx < txCount; blockIdx++) {
-                web3.eth.getTransactionFromBlock($scope.blockId, blockIdx, function(error, result) {
+                $rootScope.web3.eth.getTransactionFromBlock($scope.blockId, blockIdx, function(error, result) {
 	                // console.log("Result: ", result);
-                    web3.eth.getTransactionReceipt(result.hash, function(error, receipt) {
+                    $rootScope.web3.eth.getTransactionReceipt(result.hash, function(error, receipt) {
                         var transaction = {
                             id: receipt.transactionHash,
                             hash: receipt.transactionHash,
@@ -117,7 +117,7 @@ angular.module('ethExplorer')
                             to: receipt.to,
                             gas: receipt.gasUsed,
                             input: result.input.slice(2),
-                            value: web3.utils.fromWei(result.value, "ether"),
+                            value: $rootScope.web3.utils.fromWei(result.value, "ether"),
                             contractAddress: receipt.contractAddress
                         }
                         $scope.$apply(

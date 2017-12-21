@@ -22,7 +22,7 @@ angular.module('ethExplorer')
             if($scope.addressId!==undefined) {
             	getAddressBalance()
                     .then(function(result){
-                        $scope.balance = web3.utils.fromWei(result, "ether");
+                        $scope.balance = $rootScope.web3.utils.fromWei(result, "ether");
                     });
             	getAddressTransactionCount()
 	                .then(function(result){
@@ -44,7 +44,7 @@ angular.module('ethExplorer')
 
             function getAddressBalance(){
                 var deferred = $q.defer();
-                web3.eth.getBalance($scope.addressId, function(error, result) {
+                $rootScope.web3.eth.getBalance($scope.addressId, function(error, result) {
                     if(!error){deferred.resolve(result);}
                     else{deferred.reject(error);}
                 });
@@ -54,7 +54,7 @@ angular.module('ethExplorer')
             function getAddressTransactionCount(){
             	// var success=$.getScript('../../config.js');
                 var deferred = $q.defer();
-                web3.eth.getTransactionCount($scope.addressId, function(error, result) {
+                $rootScope.web3.eth.getTransactionCount($scope.addressId, function(error, result) {
                     if(!error){deferred.resolve(result);}
                     else{deferred.reject(error);}
                 });
@@ -63,7 +63,7 @@ angular.module('ethExplorer')
 
             function getCode(){
                 var deferred = $q.defer();
-                web3.eth.getCode($scope.addressId, function(error, result) {
+                $rootScope.web3.eth.getCode($scope.addressId, function(error, result) {
                     if(!error){deferred.resolve(result);}
                     else{deferred.reject(error);}
                 });
@@ -87,9 +87,9 @@ angular.module('ethExplorer')
 
                 var options = {fromBlock: 0, toBlock: 'latest', address: "0xf2cc0eeaaaed313542cb262b0b8c3972425143f0"};
 
-                var myfilter = web3.eth.filter(options);
+                var myfilter = $rootScope.web3.eth.filter(options);
 
-                // var myfilter= web3.eth.filter(options);
+                // var myfilter= $rootScope.web3.eth.filter(options);
                 console.log(myfilter);
 
 
@@ -98,7 +98,7 @@ angular.module('ethExplorer')
                 	  console.log("get log:", log);
                 	});
 
-                web3.eth.filter(options,
+                $rootScope.web3.eth.filter(options,
                 		function(error, result){
                 			if(!error){
                 				console.log("no error");

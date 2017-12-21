@@ -15,7 +15,7 @@ angular.module('ethExplorer')
                 getTransactionInfos()
                     .then(function(result){
                         //TODO Refactor this logic, asynchron calls + services....
-                        var number = web3.eth.blockNumber;
+                        var number = $rootScope.web3.eth.blockNumber;
 
                     $scope.result = result;
 
@@ -34,14 +34,14 @@ angular.module('ethExplorer')
                     $scope.from = result.from;
                     $scope.gas = result.gas;
                     //$scope.gasPrice = result.gasPrice.c[0] + " WEI";
-                    $scope.gasPrice = web3.utils.fromWei(result.gasPrice, "ether") + " ETH";
+                    $scope.gasPrice = $rootScope.web3.utils.fromWei(result.gasPrice, "ether") + " ETH";
                     $scope.hash = result.hash;
                     $scope.input = result.input; // that's a string
                     $scope.nonce = result.nonce;
                     $scope.to = result.to;
                     $scope.transactionIndex = result.transactionIndex;
-                    $scope.ethValue = web3.utils.fromWei(result.value, "ether");
-                    $scope.txprice = web3.utils.fromWei(String(result.gas * result.gasPrice), "ether") + " ETH";
+                    $scope.ethValue = $rootScope.web3.utils.fromWei(result.value, "ether");
+                    $scope.txprice = $rootScope.web3.utils.fromWei(String(result.gas * result.gasPrice), "ether") + " ETH";
                     if($scope.blockNumber!==undefined){
                         $scope.conf = number - $scope.blockNumber;
                         if($scope.conf===0){
@@ -50,7 +50,7 @@ angular.module('ethExplorer')
                     }
                         //TODO Refactor this logic, asynchron calls + services....
                     if($scope.blockNumber!==undefined){
-                        var info = web3.eth.getBlock($scope.blockNumber);
+                        var info = $rootScope.web3.eth.getBlock($scope.blockNumber);
                         if(info!==undefined){
                             $scope.time = info.timestamp;
                         }
@@ -70,7 +70,7 @@ angular.module('ethExplorer')
             function getTransactionInfos(){
                 var deferred = $q.defer();
 
-                web3.eth.getTransaction($scope.txId,function(error, result) {
+                $rootScope.web3.eth.getTransaction($scope.txId,function(error, result) {
                     if(!error){
                         deferred.resolve(result);
                     }
